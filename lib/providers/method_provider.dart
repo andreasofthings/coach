@@ -133,6 +133,24 @@ class MethodProvider extends ChangeNotifier {
     _applyFiltersAndSort();
   }
 
+
+  void applyAllFilters({
+    Set<String>? selectedMethodTypes,
+    int? minPeople,
+    int? maxPeople,
+    int? minTime,
+    int? maxTime,
+    MethodSort? sort,
+  }) {
+    if (selectedMethodTypes != null) _selectedMethodTypes = Set.from(selectedMethodTypes);
+    if (minPeople != null) _minPeopleFilter = minPeople;
+    if (maxPeople != null) _maxPeopleFilter = maxPeople;
+    if (minTime != null) _minTimeFilter = minTime;
+    if (maxTime != null) _maxTimeFilter = maxTime;
+    if (sort != null) _currentSort = sort;
+    _applyFiltersAndSort();
+  }
+
   void clearFilters() {
     _searchQuery = '';
     _selectedTags = {};
