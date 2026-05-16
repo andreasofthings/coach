@@ -17,9 +17,9 @@ class ChatProvider extends ChangeNotifier {
   bool get isLoading => _isLoading;
   String? get error => _error;
 
-  Future<void> initialize(String? accessToken) async {
-    if (accessToken == null) {
-      _error = 'No access token available';
+  Future<void> initialize(String? token) async {
+    if (token == null) {
+      _error = 'No token available';
       notifyListeners();
       return;
     }
@@ -60,7 +60,8 @@ class ChatProvider extends ChangeNotifier {
       // Login with JWT using raw string for login type
       await _client!.login(
         'm.login.jwt',
-        token: accessToken,
+        token: token,
+        initialDeviceDisplayName: 'Coach App',
       );
 
       // Join the room using joinRoom and find the room in client.rooms

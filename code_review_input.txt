@@ -1,7 +1,0 @@
-File: lib/screens/home_screen.dart
-Changes:
-- Removed GridView containing "Method Library" and "Active Groups" cards.
-- Removed _buildBentoItem helper method.
-- Centered the "Ready to Innovate?" card using LayoutBuilder and ConstrainedBox.
-- Added maxWidth: 600 to the card for better responsiveness.
-- Ensured it is scrollable if content exceeds screen height.

@@ -20,7 +20,7 @@ class _ChatScreenState extends State<ChatScreen> {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final authProvider = context.read<AuthProvider>();
-      context.read<ChatProvider>().initialize(authProvider.accessToken);
+      context.read<ChatProvider>().initialize(authProvider.idToken);
     });
   }
 
