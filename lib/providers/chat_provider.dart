@@ -80,7 +80,7 @@ class ChatProvider extends ChangeNotifier {
         notifyListeners();
       });
 
-      if (!_client!.syncLoop.isRunning) {
+      if (_client!.syncStatus == SyncStatus.finished) {
         _client!.sync();
       }
 
