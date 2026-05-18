@@ -23,15 +23,22 @@ class AuthProvider extends ChangeNotifier {
   String? get accessToken => _accessToken;
   String? get idToken => _idToken;
 
+  final _linkController = StreamController<Uri>.broadcast();
+  Stream<Uri> get linkStream => _linkController.stream;
+
   AuthProvider() {
     _init();
   }
 
+  @override
+  void dispose() {
+    _linkController.close();
+    super.dispose();
+  }
+
   Future<void> _init() async {
     await _loadTokens();
-    if (kIsWeb) {
-      _handleIncomingLinks();
-    }
+    _handleIncomingLinks();
   }
 
   Future<void> _loadTokens() async {
@@ -63,6 +70,7 @@ class AuthProvider extends ChangeNotifier {
   }
 
   Future<void> _processCallbackUri(Uri uri) async {
+    _linkController.add(uri);
     final code = uri.queryParameters['code'];
     if (code != null) {
       debugPrint('Received code from redirect: $code');

@@ -2,8 +2,10 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../providers/user_provider.dart';
 import '../providers/auth_provider.dart';
+import '../providers/contact_provider.dart';
 import '../models/user_profile.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -15,6 +17,8 @@ class ProfileScreen extends StatefulWidget {
 
 class _ProfileScreenState extends State<ProfileScreen> {
   Timer? _debounce;
+  bool _isSyncing = false;
+  StreamSubscription? _linkSubscription;
 
   final List<String> _countries = [
     'Germany', 'United States', 'United Kingdom', 'France', 'Spain',
@@ -46,8 +50,26 @@ class _ProfileScreenState extends State<ProfileScreen> {
   ];
 
   @override
+  void initState() {
+    super.initState();
+    _setupLinkListener();
+  }
+
+  void _setupLinkListener() {
+    final authProvider = context.read<AuthProvider>();
+    _linkSubscription = authProvider.linkStream.listen((uri) {
+      debugPrint('ProfileScreen received link: $uri');
+      // If we're returned from a google connection flow
+      if (uri.path.contains('profile') || uri.toString().contains('oauth2redirect')) {
+        _handleGoogleSync();
+      }
+    });
+  }
+
+  @override
   void dispose() {
     _debounce?.cancel();
+    _linkSubscription?.cancel();
     super.dispose();
   }
 
@@ -58,6 +80,69 @@ class _ProfileScreenState extends State<ProfileScreen> {
       final updatedProfile = updater(currentProfile);
       userProvider.updateProfile(updatedProfile);
     }
+  }
+
+  Future<void> _handleGoogleSync() async {
+    if (_isSyncing) return;
+    setState(() => _isSyncing = true);
+    final contactProvider = context.read<ContactProvider>();
+    final userProvider = context.read<UserProvider>();
+    
+    try {
+      final result = await contactProvider.syncGoogleContacts();
+      
+      if (result.success) {
+        // Refresh user profile to update isGoogleConnected status
+        await userProvider.fetchProfile();
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Contacts synced successfully')),
+          );
+        }
+      } else if (result.connectUrl != null) {
+        if (mounted) {
+          _showConnectionDialog(result.connectUrl!);
+        }
+      } else {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(result.error ?? 'Sync failed')),
+          );
+        }
+      }
+    } finally {
+      if (mounted) setState(() => _isSyncing = false);
+    }
+  }
+
+  void _showConnectionDialog(String connectUrl) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Connect Google Account'),
+        content: const Text(
+          'To sync your contacts, you need to authorize access to your Google account in your browser.'
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Cancel'),
+          ),
+          ElevatedButton(
+            onPressed: () async {
+              Navigator.pop(context);
+              final fullUrl = 'https://www.pramari.de$connectUrl';
+              final uri = Uri.parse(fullUrl);
+              // Use external application to ensure cookies/session can be shared
+              if (await canLaunchUrl(uri)) {
+                await launchUrl(uri, mode: LaunchMode.externalApplication);
+              }
+            },
+            child: const Text('Authorize'),
+          ),
+        ],
+      ),
+    );
   }
 
   @override
@@ -265,14 +350,36 @@ class _ProfileScreenState extends State<ProfileScreen> {
               context,
               'INTEGRATIONS',
               [
-                SwitchListTile(
+                ListTile(
+                  leading: const Icon(Icons.contacts_outlined),
                   title: const Text('Google Contacts', style: TextStyle(fontSize: 14)),
-                  value: profile.isGoogleConnected,
-                  onChanged: (val) {
-                    if (val) {
-                      context.read<AuthProvider>().login();
-                    }
-                  },
+                  subtitle: Text(
+                    profile.isGoogleConnected ? 'Connected' : 'Not connected',
+                    style: TextStyle(fontSize: 12, color: profile.isGoogleConnected ? Colors.green : null),
+                  ),
+                  trailing: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      if (!profile.isGoogleConnected)
+                        TextButton(
+                          onPressed: _handleGoogleSync,
+                          child: const Text('Connect'),
+                        ),
+                      if (profile.isGoogleConnected)
+                        _isSyncing 
+                          ? const SizedBox(width: 20, height: 20, child: CircularProgressIndicator(strokeWidth: 2))
+                          : IconButton(
+                              icon: const Icon(Icons.sync),
+                              onPressed: _handleGoogleSync,
+                              tooltip: 'Sync Contacts',
+                            ),
+                      IconButton(
+                        icon: const Icon(Icons.refresh, size: 20),
+                        onPressed: () => context.read<UserProvider>().fetchProfile(),
+                        tooltip: 'Refresh Status',
+                      ),
+                    ],
+                  ),
                 ),
               ],
             ),

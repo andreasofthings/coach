@@ -4,6 +4,14 @@ import 'package:http/http.dart' as http;
 import '../models/contact.dart';
 import 'auth_provider.dart';
 
+class SyncResult {
+  final bool success;
+  final String? connectUrl;
+  final String? error;
+
+  SyncResult({required this.success, this.connectUrl, this.error});
+}
+
 class ContactProvider extends ChangeNotifier {
   AuthProvider? _auth;
   List<Contact> _contacts = [];
@@ -92,9 +100,9 @@ class ContactProvider extends ChangeNotifier {
     return false;
   }
 
-  Future<bool> syncGoogleContacts({bool isRetry = false}) async {
+  Future<SyncResult> syncGoogleContacts({bool isRetry = false}) async {
     final token = _auth?.accessToken;
-    if (token == null) return false;
+    if (token == null) return SyncResult(success: false, error: 'No access token');
 
     _isLoading = true;
     notifyListeners();
@@ -110,19 +118,30 @@ class ContactProvider extends ChangeNotifier {
 
       if (response.statusCode == 200) {
         await fetchContacts();
-        return true;
-      } else if (response.statusCode == 401 && !isRetry) {
-        final refreshed = await _auth?.refresh() ?? false;
-        if (refreshed) {
-          return await syncGoogleContacts(isRetry: true);
+        return SyncResult(success: true);
+      } else if (response.statusCode == 401) {
+        final body = jsonDecode(response.body);
+        if (body is Map && body.containsKey('connect_url')) {
+          return SyncResult(
+            success: false,
+            connectUrl: body['connect_url'],
+          );
+        }
+
+        if (!isRetry) {
+          final refreshed = await _auth?.refresh() ?? false;
+          if (refreshed) {
+            return await syncGoogleContacts(isRetry: true);
+          }
         }
       }
+      return SyncResult(success: false, error: 'Sync failed: ${response.statusCode}');
     } catch (e) {
       debugPrint('Error syncing google contacts: $e');
+      return SyncResult(success: false, error: e.toString());
     } finally {
       _isLoading = false;
       notifyListeners();
     }
-    return false;
   }
 }
