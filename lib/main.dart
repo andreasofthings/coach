@@ -77,7 +77,16 @@ void main() async {
             return ContactProvider(auth);
           },
         ),
-        ChangeNotifierProvider(create: (context) => ChatProvider()),
+        ChangeNotifierProxyProvider<AuthProvider, ChatProvider>(
+          create: (context) => ChatProvider(null),
+          update: (context, auth, previous) {
+            if (previous != null) {
+              previous.updateAuth(auth);
+              return previous;
+            }
+            return ChatProvider(auth);
+          },
+        ),
       ],
       child: const Coach(),
     ),

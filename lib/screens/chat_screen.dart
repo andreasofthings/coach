@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:matrix/matrix.dart';
+import 'package:flutter/gestures.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../providers/chat_provider.dart';
 import '../providers/auth_provider.dart';
 
@@ -134,10 +136,15 @@ class _ChatScreenState extends State<ChatScreen> {
             color: isMe ? colorScheme.primaryContainer : colorScheme.surfaceContainerHighest,
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 8.0),
-              child: Text(
-                event.getDisplayEvent(timeline).body,
+              child: LinkifiedText(
+                text: event.getDisplayEvent(timeline).body,
                 style: TextStyle(
                   color: isMe ? colorScheme.onPrimaryContainer : colorScheme.onSurfaceVariant,
+                ),
+                linkStyle: TextStyle(
+                  color: isMe ? colorScheme.onPrimaryContainer : colorScheme.primary,
+                  decoration: TextDecoration.underline,
+                  fontWeight: FontWeight.bold,
                 ),
               ),
             ),
@@ -185,4 +192,67 @@ class _ChatScreenState extends State<ChatScreen> {
   }
 
   ChatProvider get chatProvider => context.read<ChatProvider>();
+}
+
+class LinkifiedText extends StatelessWidget {
+  final String text;
+  final TextStyle? style;
+  final TextStyle? linkStyle;
+
+  const LinkifiedText({
+    super.key,
+    required this.text,
+    this.style,
+    this.linkStyle,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final List<InlineSpan> spans = [];
+    final RegExp urlRegExp = RegExp(
+      r'(https?:\/\/[^\s]+|www\.[^\s]+)',
+      caseSensitive: false,
+    );
+
+    int start = 0;
+    for (final RegExpMatch match in urlRegExp.allMatches(text)) {
+      if (match.start > start) {
+        spans.add(TextSpan(
+          text: text.substring(start, match.start),
+          style: style,
+        ));
+      }
+
+      final String urlText = match.group(0)!;
+      final String fullUrl = urlText.toLowerCase().startsWith('http') ? urlText : 'https://$urlText';
+
+      spans.add(TextSpan(
+        text: urlText,
+        style: linkStyle ?? const TextStyle(
+          color: Colors.blue,
+          decoration: TextDecoration.underline,
+        ),
+        recognizer: TapGestureRecognizer()
+          ..onTap = () async {
+            final Uri uri = Uri.parse(fullUrl);
+            if (await canLaunchUrl(uri)) {
+              await launchUrl(uri, mode: LaunchMode.externalApplication);
+            }
+          },
+      ));
+
+      start = match.end;
+    }
+
+    if (start < text.length) {
+      spans.add(TextSpan(
+        text: text.substring(start),
+        style: style,
+      ));
+    }
+
+    return RichText(
+      text: TextSpan(children: spans),
+    );
+  }
 }

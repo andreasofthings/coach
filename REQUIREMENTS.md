@@ -57,6 +57,8 @@ ID: 3384684444966255399
 - **Matrix Integration:** Real-time chat functionality using the Matrix protocol.
 - **Room Support:** Connect to a dedicated "#sauna" room for collaboration.
 - **Timeline:** View message history and send messages within the app.
+- **Username:** Maintain the Username from the App and IP Provider in the Matrix chat.
+- **Events:** 
 
 ### 6. User Profile & Preferences
 - **Multi-language Support:** Interface available in English (en) and German (de).

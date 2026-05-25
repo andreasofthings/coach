@@ -3,8 +3,10 @@ import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:matrix/matrix.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart' as sqlite;
+import 'auth_provider.dart';
 
 class ChatProvider extends ChangeNotifier {
+  AuthProvider? _auth;
   Client? _client;
   Room? _room;
   bool _isLoading = false;
@@ -12,12 +14,18 @@ class ChatProvider extends ChangeNotifier {
   final String _roomAlias = '#sauna:pramari.de';
   final String _homeserverUrl = 'matrix.pramari.de';
 
+  ChatProvider(this._auth);
+
+  Future<void> updateAuth(AuthProvider? auth) async {
+    _auth = auth;
+  }
+
   Client? get client => _client;
   Room? get room => _room;
   bool get isLoading => _isLoading;
   String? get error => _error;
 
-  Future<void> initialize(String? token) async {
+  Future<void> initialize(String? token, {bool isRetry = false}) async {
     if (token == null) {
       _error = 'No token available';
       notifyListeners();
@@ -57,12 +65,23 @@ class ChatProvider extends ChangeNotifier {
       if (!_client!.isLogged()) {
         await _client!.checkHomeserver(Uri.https(_homeserverUrl, ''));
 
-        // Login with JWT using raw string for login type
-        await _client!.login(
-          'org.matrix.login.jwt',
-          token: token,
-          initialDeviceDisplayName: 'Coach App',
-        );
+        try {
+          // Login with JWT using raw string for login type
+          await _client!.login(
+            'org.matrix.login.jwt',
+            token: token,
+            initialDeviceDisplayName: 'Coach App',
+          );
+        } catch (loginErr) {
+          if (!isRetry && _auth != null) {
+            debugPrint('Matrix login failed, attempting to refresh token: $loginErr');
+            final refreshed = await _auth!.refresh();
+            if (refreshed && _auth!.accessToken != null) {
+              return await initialize(_auth!.accessToken, isRetry: true);
+            }
+          }
+          rethrow;
+        }
       }
 
       String? targetRoomId;
