@@ -12,7 +12,7 @@ import 'providers/contact_provider.dart';
 import 'screens/login_screen.dart';
 import 'screens/profile_screen.dart';
 import 'screens/workshop_detail_screen.dart';
-import 'screens/favorites_screen.dart';
+import 'screens/library_screen.dart';
 import 'screens/chat_screen.dart';
 import 'screens/contact_management_screen.dart';
 import 'models/workshop.dart';
@@ -123,7 +123,7 @@ class Coach extends StatelessWidget {
       routes: {
         '/': (context) => const MainShell(),
         '/profile': (context) => const ProfileScreen(),
-        '/favorites': (context) => const FavoritesScreen(),
+        '/favorites': (context) => const LibraryScreen(isFavoritesOnly: true),
         '/chat': (context) => const ChatScreen(),
         '/contacts': (context) => const ContactManagementScreen(),
       },

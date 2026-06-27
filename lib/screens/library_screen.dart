@@ -1,11 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/method_provider.dart';
+import '../providers/user_provider.dart';
 import '../widgets/method_square_card.dart';
 import 'method_detail_screen.dart';
 
+/// A screen that displays a collection of methods.
+///
+/// It can be configured to show all methods or only the user's favorites.
 class LibraryScreen extends StatefulWidget {
-  const LibraryScreen({super.key});
+  final bool isFavoritesOnly;
+  const LibraryScreen({super.key, this.isFavoritesOnly = false});
 
   @override
   State<LibraryScreen> createState() => _LibraryScreenState();
@@ -49,144 +54,140 @@ class _LibraryScreenState extends State<LibraryScreen> {
               minChildSize: 0.5,
               maxChildSize: 0.9,
               expand: false,
-              builder: (context, scrollController) {
-                return Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Column(
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              builder: (context, scrollController) => Container(
+                padding: const EdgeInsets.all(24),
+                child: Column(
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Text(
+                          'Filters',
+                          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                        ),
+                        TextButton(
+                          onPressed: () {
+                            setModalState(() {
+                              localSelectedTypes = {};
+                              localPeopleRange = const RangeValues(0, 50);
+                              localTimeRange = const RangeValues(0, 180);
+                              localSort = MethodSort.alphabeticalAsc;
+                            });
+                          },
+                          child: const Text('Reset All'),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 16),
+                    Expanded(
+                      child: ListView(
+                        controller: scrollController,
                         children: [
-                          const Text('Filters', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-                          TextButton(
-                            onPressed: () {
-                              setModalState(() {
-                                localSelectedTypes.clear();
-                                localPeopleRange = const RangeValues(0, 50);
-                                localTimeRange = const RangeValues(0, 180);
-                                localSort = MethodSort.alphabeticalAsc;
-                              });
-                            },
-                            child: const Text('Clear All'),
-                          ),
-                        ],
-                      ),
-                      const Divider(),
-                      Expanded(
-                        child: ListView(
-                          controller: scrollController,
-                          children: [
-                            const Text('Method Type', style: TextStyle(fontWeight: FontWeight.bold)),
-                            const SizedBox(height: 8),
-                            Wrap(
-                              spacing: 8,
-                              children: provider.availableMethodTypes.map((type) {
-                                final isSelected = localSelectedTypes.contains(type);
-                                return FilterChip(
-                                  label: Text(type),
-                                  selected: isSelected,
-                                  onSelected: (selected) {
-                                    setModalState(() {
-                                      if (selected) {
-                                        localSelectedTypes.add(type);
-                                      } else {
-                                        localSelectedTypes.remove(type);
-                                      }
-                                    });
-                                  },
-                                );
-                              }).toList(),
-                            ),
-                            const SizedBox(height: 24),
-                            Text(
-                              'Participants: ${localPeopleRange.start.round()} - ${localPeopleRange.end.round()}' ,
-                              style: const TextStyle(fontWeight: FontWeight.bold),
-                            ),
-                            RangeSlider(
-                              values: localPeopleRange,
-                              min: 0,
-                              max: 50,
-                              divisions: 50,
-                              labels: RangeLabels(
-                                localPeopleRange.start.round().toString(),
-                                localPeopleRange.end.round().toString(),
-                              ),
-                              onChanged: (values) {
-                                setModalState(() {
-                                  localPeopleRange = values;
-                                });
-                              },
-                            ),
-                            const SizedBox(height: 24),
-                            Text(
-                              'Duration: ${localTimeRange.start.round()} - ${localTimeRange.end.round()} min',
-                              style: const TextStyle(fontWeight: FontWeight.bold),
-                            ),
-                            RangeSlider(
-                              values: localTimeRange,
-                              min: 0,
-                              max: 180,
-                              divisions: 36,
-                              labels: RangeLabels(
-                                localTimeRange.start.round().toString(),
-                                localTimeRange.end.round().toString(),
-                              ),
-                              onChanged: (values) {
-                                setModalState(() {
-                                  localTimeRange = values;
-                                });
-                              },
-                            ),
-                            const SizedBox(height: 24),
-                            const Text('Sort By', style: TextStyle(fontWeight: FontWeight.bold)),
-                            ...MethodSort.values.map((sort) {
-                              String label = '';
-                              switch (sort) {
-                                case MethodSort.alphabeticalAsc: label = 'Alphabetical (A-Z)'; break;
-                                case MethodSort.alphabeticalDesc: label = 'Alphabetical (Z-A)'; break;
-                                case MethodSort.dateLatest: label = 'Latest'; break;
-                                case MethodSort.dateOldest: label = 'Oldest'; break;
-                              }
-                              return RadioListTile<MethodSort>(
-                                title: Text(label),
-                                value: sort,
-                                groupValue: localSort,
-                                onChanged: (value) {
-                                  if (value != null) {
-                                    setModalState(() {
-                                      localSort = value;
-                                    });
-                                  }
+                          const Text('Method Type', style: TextStyle(fontWeight: FontWeight.bold)),
+                          const SizedBox(height: 12),
+                          Wrap(
+                            spacing: 8,
+                            runSpacing: 8,
+                            children: provider.availableMethodTypes.map((type) {
+                              final isSelected = localSelectedTypes.contains(type);
+                              return FilterChip(
+                                label: Text(type),
+                                selected: isSelected,
+                                onSelected: (selected) {
+                                  setModalState(() {
+                                    if (selected) {
+                                      localSelectedTypes.add(type);
+                                    } else {
+                                      localSelectedTypes.remove(type);
+                                    }
+                                  });
                                 },
-                                contentPadding: EdgeInsets.zero,
-                                dense: true,
                               );
                             }).toList(),
-                          ],
-                        ),
-                      ),
-                      const SizedBox(height: 16),
-                      SizedBox(
-                        width: double.infinity,
-                        child: ElevatedButton(
-                          onPressed: () {
-                            provider.applyAllFilters(
-                              selectedMethodTypes: localSelectedTypes,
-                              minPeople: localPeopleRange.start.round(),
-                              maxPeople: localPeopleRange.end.round(),
-                              minTime: localTimeRange.start.round(),
-                              maxTime: localTimeRange.end.round(),
-                              sort: localSort,
+                          ),
+                          const SizedBox(height: 24),
+                          const Text('Participants', style: TextStyle(fontWeight: FontWeight.bold)),
+                          RangeSlider(
+                            values: localPeopleRange,
+                            min: 0,
+                            max: 50,
+                            divisions: 10,
+                            labels: RangeLabels(
+                              localPeopleRange.start.round().toString(),
+                              localPeopleRange.end.round().toString(),
+                            ),
+                            onChanged: (values) {
+                              setModalState(() {
+                                localPeopleRange = values;
+                              });
+                            },
+                          ),
+                          const SizedBox(height: 24),
+                          const Text('Duration (min)', style: TextStyle(fontWeight: FontWeight.bold)),
+                          RangeSlider(
+                            values: localTimeRange,
+                            min: 0,
+                            max: 180,
+                            divisions: 12,
+                            labels: RangeLabels(
+                              localTimeRange.start.round().toString(),
+                              localTimeRange.end.round().toString(),
+                            ),
+                            onChanged: (values) {
+                              setModalState(() {
+                                localTimeRange = values;
+                              });
+                            },
+                          ),
+                          const SizedBox(height: 24),
+                          const Text('Sort By', style: TextStyle(fontWeight: FontWeight.bold)),
+                          ...MethodSort.values.map((sort) {
+                            String label = '';
+                            switch (sort) {
+                              case MethodSort.alphabeticalAsc: label = 'Alphabetical (A-Z)'; break;
+                              case MethodSort.alphabeticalDesc: label = 'Alphabetical (Z-A)'; break;
+                              case MethodSort.dateLatest: label = 'Latest'; break;
+                              case MethodSort.dateOldest: label = 'Oldest'; break;
+                            }
+                            return RadioListTile<MethodSort>(
+                              title: Text(label),
+                              value: sort,
+                              groupValue: localSort,
+                              onChanged: (value) {
+                                if (value != null) {
+                                  setModalState(() {
+                                    localSort = value;
+                                  });
+                                }
+                              },
+                              contentPadding: EdgeInsets.zero,
+                              dense: true,
                             );
-                            Navigator.pop(context);
-                          },
-                          child: const Text('Apply Filters'),
-                        ),
+                          }).toList(),
+                        ],
                       ),
-                    ],
-                  ),
-                );
-              },
+                    ),
+                    const SizedBox(height: 16),
+                    SizedBox(
+                      width: double.infinity,
+                      child: ElevatedButton(
+                        onPressed: () {
+                          provider.applyAllFilters(
+                            selectedMethodTypes: localSelectedTypes,
+                            minPeople: localPeopleRange.start.round(),
+                            maxPeople: localPeopleRange.end.round(),
+                            minTime: localTimeRange.start.round(),
+                            maxTime: localTimeRange.end.round(),
+                            sort: localSort,
+                          );
+                          Navigator.pop(context);
+                        },
+                        child: const Text('Apply Filters'),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
             );
           },
         );
@@ -210,7 +211,7 @@ class _LibraryScreenState extends State<LibraryScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'LIBRARY',
+                      widget.isFavoritesOnly ? 'FAVORITE' : 'LIBRARY',
                       style: TextStyle(
                         fontSize: 10,
                         fontWeight: FontWeight.w900,
@@ -218,9 +219,9 @@ class _LibraryScreenState extends State<LibraryScreen> {
                         color: colorScheme.primary,
                       ),
                     ),
-                    const Text(
-                      'METHOD TOOLKIT',
-                      style: TextStyle(
+                    Text(
+                      widget.isFavoritesOnly ? 'METHODS' : 'METHOD TOOLKIT',
+                      style: const TextStyle(
                         fontSize: 24,
                         fontWeight: FontWeight.w900,
                         letterSpacing: -0.5,
@@ -287,13 +288,24 @@ class _LibraryScreenState extends State<LibraryScreen> {
           ),
           const Divider(height: 1),
           Expanded(
-            child: Consumer<MethodProvider>(
-              builder: (context, provider, child) {
+            child: Consumer2<MethodProvider, UserProvider>(
+              builder: (context, provider, userProvider, child) {
                 if (provider.isLoading) {
                   return const Center(child: CircularProgressIndicator());
                 }
-                if (provider.methods.isEmpty) {
-                  return const Center(child: Text('No methods found.'));
+
+                final favoriteIds = userProvider.profile?.favorites ?? [];
+                final methods = widget.isFavoritesOnly
+                    ? provider.methods.where((m) => favoriteIds.contains(m.id)).toList()
+                    : provider.methods;
+
+                if (methods.isEmpty) {
+                  return Center(
+                    child: Text(
+                      widget.isFavoritesOnly ? 'No favorites yet' : 'No methods found.',
+                      style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: colorScheme.onSurfaceVariant),
+                    ),
+                  );
                 }
                 return LayoutBuilder(
                   builder: (context, constraints) {
@@ -320,9 +332,9 @@ class _LibraryScreenState extends State<LibraryScreen> {
                             mainAxisSpacing: 12,
                             childAspectRatio: 1.0,
                           ),
-                          itemCount: provider.methods.length,
+                          itemCount: methods.length,
                           itemBuilder: (context, index) {
-                            final method = provider.methods[index];
+                            final method = methods[index];
                             return MethodSquareCard(
                               method: method,
                               onTap: () {

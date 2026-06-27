@@ -19,7 +19,7 @@ class _MainShellState extends State<MainShell> {
 
   final List<Widget> _screens = [
     const HomeContent(),
-    const LibraryScreen(),
+    const LibraryScreen(isFavoritesOnly: false),
     const WorkshopScreen(),
     const Center(child: Text('Menu placeholder')),
   ];
