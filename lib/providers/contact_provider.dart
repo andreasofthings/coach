@@ -100,6 +100,77 @@ class ContactProvider extends ChangeNotifier {
     return false;
   }
 
+  Future<bool> updateContact(Contact contact) async {
+    return _updateContactInternal(contact, isRetry: false);
+  }
+
+  Future<bool> _updateContactInternal(Contact contact, {required bool isRetry}) async {
+    final token = _auth?.accessToken;
+    if (token == null) return false;
+
+    try {
+      final response = await http.put(
+        Uri.parse('$_baseUrl/${contact.id}/'),
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+        },
+        body: contact.toJson(),
+      );
+
+      if (response.statusCode == 200) {
+        final updated = Contact.fromMap(jsonDecode(response.body));
+        final idx = _contacts.indexWhere((c) => c.id == contact.id);
+        if (idx != -1) {
+          _contacts[idx] = updated;
+          notifyListeners();
+        }
+        return true;
+      } else if (response.statusCode == 401 && !isRetry) {
+        final refreshed = await _auth?.refresh() ?? false;
+        if (refreshed) {
+          return await _updateContactInternal(contact, isRetry: true);
+        }
+      }
+    } catch (e) {
+      debugPrint('Error updating contact: $e');
+    }
+    return false;
+  }
+
+  Future<bool> deleteContact(String id) async {
+    return _deleteContactInternal(id, isRetry: false);
+  }
+
+  Future<bool> _deleteContactInternal(String id, {required bool isRetry}) async {
+    final token = _auth?.accessToken;
+    if (token == null) return false;
+
+    try {
+      final response = await http.delete(
+        Uri.parse('$_baseUrl/$id/'),
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+        },
+      );
+
+      if (response.statusCode == 204 || response.statusCode == 200) {
+        _contacts.removeWhere((c) => c.id == id);
+        notifyListeners();
+        return true;
+      } else if (response.statusCode == 401 && !isRetry) {
+        final refreshed = await _auth?.refresh() ?? false;
+        if (refreshed) {
+          return await _deleteContactInternal(id, isRetry: true);
+        }
+      }
+    } catch (e) {
+      debugPrint('Error deleting contact: $e');
+    }
+    return false;
+  }
+
   Future<SyncResult> syncGoogleContacts({bool isRetry = false}) async {
     final token = _auth?.accessToken;
     if (token == null) return SyncResult(success: false, error: 'No access token');

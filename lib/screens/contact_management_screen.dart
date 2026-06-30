@@ -99,10 +99,46 @@ class _ContactManagementScreenState extends State<ContactManagementScreen> {
                         ),
                         title: Text(contact.fullName),
                         subtitle: Text(contact.email),
-                        trailing: IconButton(
-                          icon: const Icon(Icons.add_task),
-                          tooltip: 'Add to workshop',
-                          onPressed: () => _showWorkshopSelectionDialog(context, contact),
+                        trailing: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            IconButton(
+                              icon: const Icon(Icons.add_task, size: 20),
+                              tooltip: 'Add to workshop',
+                              onPressed: () => _showWorkshopSelectionDialog(context, contact),
+                            ),
+                            IconButton(
+                              icon: const Icon(Icons.edit_outlined, size: 20),
+                              tooltip: 'Edit contact',
+                              onPressed: () => _showEditContactDialog(context, contact),
+                            ),
+                            IconButton(
+                              icon: const Icon(Icons.delete_outline, size: 20),
+                              tooltip: 'Delete contact',
+                              onPressed: () async {
+                                final confirm = await showDialog<bool>(
+                                  context: context,
+                                  builder: (context) => AlertDialog(
+                                    title: const Text('Delete Contact'),
+                                    content: Text('Are you sure you want to delete ${contact.fullName}?'),
+                                    actions: [
+                                      TextButton(
+                                        onPressed: () => Navigator.pop(context, false),
+                                        child: const Text('Cancel'),
+                                      ),
+                                      TextButton(
+                                        onPressed: () => Navigator.pop(context, true),
+                                        child: const Text('Delete'),
+                                      ),
+                                    ],
+                                  ),
+                                );
+                                if (confirm == true && context.mounted) {
+                                  context.read<ContactProvider>().deleteContact(contact.id);
+                                }
+                              },
+                            ),
+                          ],
                         ),
                       );
                     },
@@ -216,6 +252,62 @@ class _ContactManagementScreenState extends State<ContactManagementScreen> {
               }
             },
             child: const Text('Add'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _showEditContactDialog(BuildContext context, Contact contact) {
+    final firstNameController = TextEditingController(text: contact.firstName);
+    final lastNameController = TextEditingController(text: contact.lastName);
+    final emailController = TextEditingController(text: contact.email);
+
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Edit Contact'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            TextField(
+              controller: firstNameController,
+              decoration: const InputDecoration(labelText: 'First Name'),
+            ),
+            TextField(
+              controller: lastNameController,
+              decoration: const InputDecoration(labelText: 'Last Name'),
+            ),
+            TextField(
+              controller: emailController,
+              decoration: const InputDecoration(labelText: 'Email'),
+              keyboardType: TextInputType.emailAddress,
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () async {
+              if (emailController.text.isEmpty) return;
+              final updatedContact = Contact(
+                id: contact.id,
+                firstName: firstNameController.text,
+                lastName: lastNameController.text,
+                email: emailController.text,
+                googleContactId: contact.googleContactId,
+                source: contact.source,
+                photoUrl: contact.photoUrl,
+              );
+              final success = await context.read<ContactProvider>().updateContact(updatedContact);
+              if (success && context.mounted) {
+                Navigator.pop(context);
+              }
+            },
+            child: const Text('Save'),
           ),
         ],
       ),

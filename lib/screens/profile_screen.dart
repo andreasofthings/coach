@@ -354,9 +354,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   leading: const Icon(Icons.contacts_outlined),
                   title: const Text('Google Contacts', style: TextStyle(fontSize: 14)),
                   subtitle: Text(
-                    profile.isGoogleConnected ? 'Connected' : 'Not connected',
+                    profile.isGoogleConnected 
+                        ? 'Connected • Tap to manage contacts' 
+                        : 'Not connected',
                     style: TextStyle(fontSize: 12, color: profile.isGoogleConnected ? Colors.green : null),
                   ),
+                  onTap: () {
+                    Navigator.pushNamed(context, '/contacts');
+                  },
                   trailing: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
