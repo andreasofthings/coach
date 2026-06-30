@@ -154,6 +154,16 @@ class _MainShellState extends State<MainShell> {
                 context.read<AuthProvider>().logout();
               },
             ),
+            const SizedBox(height: 8),
+            Center(
+              child: Text(
+                'Build: ${const String.fromEnvironment('BUILD_NUMBER', defaultValue: 'local')}',
+                style: TextStyle(
+                  color: colorScheme.onSurface.withOpacity(0.5),
+                  fontSize: 11,
+                ),
+              ),
+            ),
             const SizedBox(height: 16),
           ],
         ),
