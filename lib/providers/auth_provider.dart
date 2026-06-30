@@ -303,7 +303,10 @@ class AuthProvider extends ChangeNotifier {
   }
 
   Future<bool> refresh() async {
-    if (_refreshToken == null) return false;
+    if (_refreshToken == null) {
+      await logout();
+      return false;
+    }
     if (_refreshFuture != null) return _refreshFuture!;
 
     _refreshFuture = _doRefresh();
