@@ -1,0 +1,242 @@
+{
+  "menuPlaceholder": "Menu placeholder",
+  "appTitle": "Coach",
+  "coachLevel": "COACH LEVEL {level}",
+  "@coachLevel": {
+    "placeholders": {
+      "level": {
+        "type": "num"
+      }
+    }
+  },
+  "profile": "Profile",
+  "favorites": "Favorites",
+  "contacts": "Contacts",
+  "chat": "Chat",
+  "donate": "Donate",
+  "logout": "Logout",
+  "buildVersion": "Build: {buildNumber}",
+  "@buildVersion": {
+    "placeholders": {
+      "buildNumber": {
+        "type": "String"
+      }
+    }
+  },
+  "homeLabel": "Home",
+  "libraryLabel": "Library",
+  "workshopLabel": "Workshop",
+  "menuLabel": "Menu",
+  "readyToInnovate": "Ready to Innovate?",
+  "homeSubtitle": "Access your creative workshops, templates, and facilitation guides to spark the next big idea.",
+  "startSession": "Start a Session",
+  "submitIdea": "Submit an Idea",
+  "readyToCoach": "Ready to Coach?",
+  "loginSubtitle": "Start planning your next workshop here.",
+  "login": "Login",
+  "madeWithLove": "made with ❤️ in Munich by ",
+  "loginFailed": "Login failed: {error}",
+  "@loginFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "filters": "Filters",
+  "resetAll": "Reset All",
+  "methodType": "Method Type",
+  "participants": "Participants",
+  "durationMin": "Duration (min)",
+  "sortBy": "Sort By",
+  "sortAlphabeticalAsc": "Alphabetical (A-Z)",
+  "sortAlphabeticalDesc": "Alphabetical (Z-A)",
+  "sortLatest": "Latest",
+  "sortOldest": "Oldest",
+  "applyFilters": "Apply Filters",
+  "favoriteHeader": "FAVORITE",
+  "libraryHeader": "LIBRARY",
+  "methodsHeader": "METHODS",
+  "methodToolkitHeader": "METHOD TOOLKIT",
+  "searchMethodsHint": "Search methods...",
+  "categoryAll": "All",
+  "noFavoritesYet": "No favorites yet",
+  "noMethodsFound": "No methods found.",
+  "clearAll": "Clear All",
+  "sortDateNewest": "Date: Newest",
+  "sortDateOldest": "Date: Oldest",
+  "status": "Status",
+  "locationMode": "Location Mode",
+  "apply": "Apply",
+  "createWorkshop": "Create Workshop",
+  "title": "Title",
+  "workshopType": "Workshop Type",
+  "dateLabel": "Date: {date}",
+  "@dateLabel": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "duration": "Duration",
+  "cancel": "Cancel",
+  "create": "Create",
+  "workshopPlanner": "Workshop Planner",
+  "workshopPlannerSubtitle": "Manage and track your upcoming sessions.",
+  "searchSessionsHint": "Search sessions...",
+  "allWorkshops": "All Workshops",
+  "upcoming": "Upcoming",
+  "past": "Past",
+  "deleteWorkshop": "Delete Workshop",
+  "deleteWorkshopConfirm": "Are you sure you want to delete this workshop?",
+  "delete": "Delete",
+  "viewOutcomes": "View Outcomes",
+  "organizeSessionsSubtitle": "Organize your sessions easily.",
+  "organizeSessionsDetail": "Select a workshop to view full participant analytics and materials.",
+  "participantsCount": "{count} Participants",
+  "@participantsCount": {
+    "placeholders": {
+      "count": {
+        "type": "num"
+      }
+    }
+  },
+  "workshopDetails": "Workshop Details",
+  "participantsHeader": "PARTICIPANTS",
+  "noParticipantsYet": "No participants added yet.",
+  "sessionsHeader": "SESSIONS",
+  "noSessionsYet": "No sessions planned yet.",
+  "addParticipant": "Add Participant",
+  "searchContactsHint": "Search existing contacts...",
+  "firstName": "First Name",
+  "lastName": "Last Name",
+  "email": "Email",
+  "add": "Add",
+  "addSession": "Add Session",
+  "durationMinLabel": "Duration (min)",
+  "minutesLabel": "{minutes} min",
+  "@minutesLabel": {
+    "placeholders": {
+      "minutes": {
+        "type": "num"
+      }
+    }
+  },
+  "methodDetails": "Method Details",
+  "minutesCapsLabel": "{minutes} MINUTES",
+  "@minutesCapsLabel": {
+    "placeholders": {
+      "minutes": {
+        "type": "num"
+      }
+    }
+  },
+  "methodInput": "METHOD INPUT",
+  "methodOutput": "METHOD OUTPUT",
+  "theWhyBenefit": "THE \"WHY\" / BENEFIT",
+  "theHowProcess": "THE \"HOW\" / PROCESS",
+  "proTip": "PRO TIP:",
+  "crazyEightsProTipDesc": "Keep it quiet. This is an individual exercise to prevent groupthink and ensure diverse perspectives.",
+  "paperSharpies": "Paper & Sharpies",
+  "oneToEightParticipants": "1-8 Participants",
+  "timer": "Timer",
+  "eightRoughSketches": "8 Rough Sketches",
+  "diverseIdeas": "Diverse Ideas",
+  "nextStepFocus": "Next-step Focus",
+  "step1Title": "Prepare Paper",
+  "step1Desc": "Fold a blank piece of A4 paper into 8 sections. This creates a grid for your sketches.",
+  "step2Title": "Set the Clock",
+  "step2Desc": "Set a timer for 8 minutes total. You will have exactly 60 seconds per section.",
+  "step3Title": "Sketch Fast",
+  "step3Desc": "Sketch one idea per section. Don't worry about quality; focus on the core concept and quantity.",
+  "step4Title": "Review & Select",
+  "step4Desc": "Once the 8 minutes are up, share your ideas with the group and vote on the strongest concepts.",
+  "contactsSyncedSuccessfully": "Contacts synced successfully",
+  "syncFailed": "Sync failed",
+  "connectGoogleAccount": "Connect Google Account",
+  "googleConnectDesc": "To sync your contacts, you need to authorize access to your Google account in your browser.",
+  "authorize": "Authorize",
+  "profileNotFound": "Profile not found",
+  "personalInformation": "PERSONAL INFORMATION",
+  "language": "Language",
+  "english": "English",
+  "german": "German",
+  "country": "Country",
+  "selectCountry": "Select Country",
+  "dateOfBirth": "Date of Birth",
+  "notSet": "Not set",
+  "workshopPreferences": "WORKSHOP PREFERENCES",
+  "defaultSetting": "Default Setting",
+  "onSite": "On-Site",
+  "hybrid": "Hybrid",
+  "virtual": "Virtual",
+  "defaultLengthMin": "Default Length (min)",
+  "defaultGroupSize": "Default Group Size",
+  "confidenceLevel": "Confidence Level",
+  "visualPreferences": "VISUAL PREFERENCES",
+  "themeColor": "Theme Color",
+  "profileIcon": "Profile Icon",
+  "integrations": "INTEGRATIONS",
+  "googleContacts": "Google Contacts",
+  "connectedTapToManage": "Connected • Tap to manage contacts",
+  "notConnected": "Not connected",
+  "connect": "Connect",
+  "syncContactsTooltip": "Sync Contacts",
+  "refreshStatusTooltip": "Refresh Status",
+  "activity": "ACTIVITY",
+  "favoriteMethods": "Favorite Methods",
+  "selectThemeColor": "Select Theme Color",
+  "selectProfileIcon": "Select Profile Icon",
+  "searchContactsHint2": "Search contacts...",
+  "noContactsFound": "No contacts found",
+  "addToWorkshopTooltip": "Add to workshop",
+  "editContactTooltip": "Edit contact",
+  "deleteContactTooltip": "Delete contact",
+  "deleteContactTitle": "Delete Contact",
+  "deleteContactConfirm": "Are you sure you want to delete {name}?",
+  "@deleteContactConfirm": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "failedToSyncContacts": "Failed to sync contacts",
+  "addContactTitle": "Add Contact",
+  "editContactTitle": "Edit Contact",
+  "save": "Save",
+  "addContactToWorkshopTitle": "Add {name} to Workshop",
+  "@addContactToWorkshopTitle": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "noPlannedWorkshops": "No planned workshops found.",
+  "contactAddedToWorkshop": "{contactName} added to {workshopTitle}",
+  "@contactAddedToWorkshop": {
+    "placeholders": {
+      "contactName": {
+        "type": "String"
+      },
+      "workshopTitle": {
+        "type": "String"
+      }
+    }
+  },
+  "failedToAddParticipant": "Failed to add participant",
+  "saunaChatTitle": "Sauna Chat",
+  "connectingToSauna": "Connecting to #sauna...",
+  "errorLoadingTimeline": "Error loading timeline: {error}",
+  "@errorLoadingTimeline": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "noMessagesYet": "No messages yet",
+  "typeMessageHint": "Type a message..."
+}

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../providers/auth_provider.dart';
 import '../providers/user_provider.dart';
 import '../screens/home_screen.dart';
@@ -17,11 +18,11 @@ class _MainShellState extends State<MainShell> {
   int _selectedIndex = 0;
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
-  final List<Widget> _screens = [
+  List<Widget> get _screens => [
     const HomeContent(),
     const LibraryScreen(isFavoritesOnly: false),
     const WorkshopScreen(),
-    const Center(child: Text('Menu placeholder')),
+    Center(child: Text(AppLocalizations.of(context)!.menuPlaceholder)),
   ];
 
   void _onItemTapped(int index) {
@@ -47,9 +48,9 @@ class _MainShellState extends State<MainShell> {
           children: [
             Icon(Icons.lightbulb, color: colorScheme.primary),
             const SizedBox(width: 8),
-            const Text(
-              'Coach',
-              style: TextStyle(
+            Text(
+              AppLocalizations.of(context)!.appTitle,
+              style: const TextStyle(
                 fontWeight: FontWeight.w900,
                 letterSpacing: -0.5,
               ),
@@ -91,7 +92,7 @@ class _MainShellState extends State<MainShell> {
                       borderRadius: BorderRadius.circular(4),
                     ),
                     child: Text(
-                      'COACH LEVEL ${userProfile?.level ?? 1}',
+                      AppLocalizations.of(context)!.coachLevel(userProfile?.level ?? 1),
                       style: TextStyle(
                         fontSize: 10,
                         fontWeight: FontWeight.bold,
@@ -108,7 +109,7 @@ class _MainShellState extends State<MainShell> {
             ),
             ListTile(
               leading: const Icon(Icons.person),
-              title: const Text('Profile'),
+              title: Text(AppLocalizations.of(context)!.profile),
               onTap: () {
                 Navigator.pop(context);
                 Navigator.pushNamed(context, '/profile');
@@ -116,7 +117,7 @@ class _MainShellState extends State<MainShell> {
             ),
             ListTile(
               leading: const Icon(Icons.favorite),
-              title: const Text('Favorites'),
+              title: Text(AppLocalizations.of(context)!.favorites),
               onTap: () {
                 Navigator.pop(context);
                 Navigator.pushNamed(context, '/favorites');
@@ -124,7 +125,7 @@ class _MainShellState extends State<MainShell> {
             ),
             ListTile(
               leading: const Icon(Icons.contacts),
-              title: const Text('Contacts'),
+              title: Text(AppLocalizations.of(context)!.contacts),
               onTap: () {
                 Navigator.pop(context);
                 Navigator.pushNamed(context, '/contacts');
@@ -132,7 +133,7 @@ class _MainShellState extends State<MainShell> {
             ),
             ListTile(
               leading: const Icon(Icons.chat),
-              title: const Text('Chat'),
+              title: Text(AppLocalizations.of(context)!.chat),
               onTap: () {
                 Navigator.pop(context);
                 Navigator.pushNamed(context, '/chat');
@@ -140,7 +141,7 @@ class _MainShellState extends State<MainShell> {
             ),
             ListTile(
               leading: const Icon(Icons.volunteer_activism),
-              title: const Text('Donate'),
+              title: Text(AppLocalizations.of(context)!.donate),
               onTap: () {
                 Navigator.pop(context);
               },
@@ -149,7 +150,7 @@ class _MainShellState extends State<MainShell> {
             const Divider(),
             ListTile(
               leading: Icon(Icons.logout, color: colorScheme.error),
-              title: Text('Logout', style: TextStyle(color: colorScheme.error)),
+              title: Text(AppLocalizations.of(context)!.logout, style: TextStyle(color: colorScheme.error)),
               onTap: () {
                 context.read<AuthProvider>().logout();
               },
@@ -157,7 +158,7 @@ class _MainShellState extends State<MainShell> {
             const SizedBox(height: 8),
             Center(
               child: Text(
-                'Build: ${const String.fromEnvironment('BUILD_NUMBER', defaultValue: 'local')}',
+                AppLocalizations.of(context)!.buildVersion(const String.fromEnvironment('BUILD_NUMBER', defaultValue: 'local')),
                 style: TextStyle(
                   color: colorScheme.onSurface.withOpacity(0.5),
                   fontSize: 11,
@@ -187,23 +188,23 @@ class _MainShellState extends State<MainShell> {
             onDestinationSelected: _onItemTapped,
             destinations: const [
               NavigationDestination(
-                icon: Icon(Icons.home_outlined),
-                selectedIcon: Icon(Icons.home),
-                label: 'Home',
+                icon: const Icon(Icons.home_outlined),
+                selectedIcon: const Icon(Icons.home),
+                label: AppLocalizations.of(context)!.homeLabel,
               ),
               NavigationDestination(
-                icon: Icon(Icons.subscriptions_outlined),
-                selectedIcon: Icon(Icons.subscriptions),
-                label: 'Library',
+                icon: const Icon(Icons.subscriptions_outlined),
+                selectedIcon: const Icon(Icons.subscriptions),
+                label: AppLocalizations.of(context)!.libraryLabel,
               ),
               NavigationDestination(
-                icon: Icon(Icons.auto_awesome_outlined),
-                selectedIcon: Icon(Icons.auto_awesome),
-                label: 'Workshop',
+                icon: const Icon(Icons.auto_awesome_outlined),
+                selectedIcon: const Icon(Icons.auto_awesome),
+                label: AppLocalizations.of(context)!.workshopLabel,
               ),
               NavigationDestination(
-                icon: Icon(Icons.menu),
-                label: 'Menu',
+                icon: const Icon(Icons.menu),
+                label: AppLocalizations.of(context)!.menuLabel,
               ),
             ],
           ),

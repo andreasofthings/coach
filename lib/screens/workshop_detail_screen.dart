@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../models/workshop.dart';
 import '../models/participant.dart';
 import '../models/session.dart';
@@ -38,7 +39,7 @@ class _WorkshopDetailScreenState extends State<WorkshopDetailScreen> {
           icon: const Icon(Icons.arrow_back),
           onPressed: () => Navigator.pop(context),
         ),
-        title: const Text('Workshop Details', style: TextStyle(fontWeight: FontWeight.bold)),
+        title: Text(AppLocalizations.of(context)!.workshopDetails, style: const TextStyle(fontWeight: FontWeight.bold)),
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
@@ -95,9 +96,9 @@ class _WorkshopDetailScreenState extends State<WorkshopDetailScreen> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Text(
-                  'PARTICIPANTS',
-                  style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, letterSpacing: 1.2),
+                Text(
+                  AppLocalizations.of(context)!.participantsHeader,
+                  style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold, letterSpacing: 1.2),
                 ),
                 IconButton(
                   icon: const Icon(Icons.add_circle_outline, size: 20),
@@ -113,7 +114,7 @@ class _WorkshopDetailScreenState extends State<WorkshopDetailScreen> {
                   return const Center(child: CircularProgressIndicator());
                 }
                 if (participants.isEmpty) {
-                  return const Text('No participants added yet.', style: TextStyle(fontStyle: FontStyle.italic));
+                  return Text(AppLocalizations.of(context)!.noParticipantsYet, style: const TextStyle(fontStyle: FontStyle.italic));
                 }
                 return Column(
                   children: participants.map((p) => _buildParticipantItem(context, p)).toList(),
@@ -124,9 +125,9 @@ class _WorkshopDetailScreenState extends State<WorkshopDetailScreen> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Text(
-                  'SESSIONS',
-                  style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, letterSpacing: 1.2),
+                Text(
+                  AppLocalizations.of(context)!.sessionsHeader,
+                  style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold, letterSpacing: 1.2),
                 ),
                 IconButton(
                   icon: const Icon(Icons.add_circle_outline, size: 20),
@@ -142,7 +143,7 @@ class _WorkshopDetailScreenState extends State<WorkshopDetailScreen> {
                   return const Center(child: CircularProgressIndicator());
                 }
                 if (sessions.isEmpty) {
-                  return const Text('No sessions planned yet.', style: TextStyle(fontStyle: FontStyle.italic));
+                  return Text(AppLocalizations.of(context)!.noSessionsYet, style: const TextStyle(fontStyle: FontStyle.italic));
                 }
                 return Column(
                   children: sessions.map((s) => _buildSessionItem(context, s)).toList(),
@@ -217,7 +218,7 @@ class _WorkshopDetailScreenState extends State<WorkshopDetailScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(session.title, style: const TextStyle(fontWeight: FontWeight.bold)),
-                  Text('${session.durationMinutes} min', style: TextStyle(fontSize: 12, color: colorScheme.onSurfaceVariant)),
+                  Text(AppLocalizations.of(context)!.minutesLabel(session.durationMinutes), style: TextStyle(fontSize: 12, color: colorScheme.onSurfaceVariant)),
                 ],
               ),
             ),
@@ -239,7 +240,7 @@ class _WorkshopDetailScreenState extends State<WorkshopDetailScreen> {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Add Participant'),
+        title: Text(AppLocalizations.of(context)!.addParticipant),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -264,21 +265,21 @@ class _WorkshopDetailScreenState extends State<WorkshopDetailScreen> {
                 return TextField(
                   controller: controller,
                   focusNode: focusNode,
-                  decoration: const InputDecoration(
-                    labelText: 'Search existing contacts...',
-                    prefixIcon: Icon(Icons.search),
+                  decoration: InputDecoration(
+                    labelText: AppLocalizations.of(context)!.searchContactsHint,
+                    prefixIcon: const Icon(Icons.search),
                   ),
                 );
               },
             ),
             const Divider(height: 32),
-            TextField(controller: firstNameController, decoration: const InputDecoration(labelText: 'First Name')),
-            TextField(controller: lastNameController, decoration: const InputDecoration(labelText: 'Last Name')),
-            TextField(controller: emailController, decoration: const InputDecoration(labelText: 'Email')),
+            TextField(controller: firstNameController, decoration: InputDecoration(labelText: AppLocalizations.of(context)!.firstName)),
+            TextField(controller: lastNameController, decoration: InputDecoration(labelText: AppLocalizations.of(context)!.lastName)),
+            TextField(controller: emailController, decoration: InputDecoration(labelText: AppLocalizations.of(context)!.email)),
           ],
         ),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(context), child: const Text('Cancel')),
+          TextButton(onPressed: () => Navigator.pop(context), child: Text(AppLocalizations.of(context)!.cancel)),
           ElevatedButton(
             onPressed: () {
               final p = WorkshopParticipant(
@@ -291,7 +292,7 @@ class _WorkshopDetailScreenState extends State<WorkshopDetailScreen> {
               context.read<ParticipantProvider>().addParticipant(p);
               Navigator.pop(context);
             },
-            child: const Text('Add'),
+            child: Text(AppLocalizations.of(context)!.add),
           ),
         ],
       ),
@@ -305,20 +306,20 @@ class _WorkshopDetailScreenState extends State<WorkshopDetailScreen> {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Add Session'),
+        title: Text(AppLocalizations.of(context)!.addSession),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            TextField(controller: titleController, decoration: const InputDecoration(labelText: 'Title')),
+            TextField(controller: titleController, decoration: InputDecoration(labelText: AppLocalizations.of(context)!.title)),
             TextField(
               controller: durationController,
-              decoration: const InputDecoration(labelText: 'Duration (min)'),
+              decoration: InputDecoration(labelText: AppLocalizations.of(context)!.durationMinLabel),
               keyboardType: TextInputType.number,
             ),
           ],
         ),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(context), child: const Text('Cancel')),
+          TextButton(onPressed: () => Navigator.pop(context), child: Text(AppLocalizations.of(context)!.cancel)),
           ElevatedButton(
             onPressed: () {
               final s = WorkshopSession(
@@ -330,7 +331,7 @@ class _WorkshopDetailScreenState extends State<WorkshopDetailScreen> {
               context.read<SessionProvider>().addSession(s);
               Navigator.pop(context);
             },
-            child: const Text('Add'),
+            child: Text(AppLocalizations.of(context)!.add),
           ),
         ],
       ),

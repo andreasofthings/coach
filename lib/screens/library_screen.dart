@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../providers/method_provider.dart';
 import '../providers/user_provider.dart';
 import '../widgets/method_square_card.dart';
@@ -61,9 +62,9 @@ class _LibraryScreenState extends State<LibraryScreen> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        const Text(
-                          'Filters',
-                          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                        Text(
+                          AppLocalizations.of(context)!.filters,
+                          style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                         ),
                         TextButton(
                           onPressed: () {
@@ -74,7 +75,7 @@ class _LibraryScreenState extends State<LibraryScreen> {
                               localSort = MethodSort.alphabeticalAsc;
                             });
                           },
-                          child: const Text('Reset All'),
+                          child: Text(AppLocalizations.of(context)!.resetAll),
                         ),
                       ],
                     ),
@@ -83,7 +84,7 @@ class _LibraryScreenState extends State<LibraryScreen> {
                       child: ListView(
                         controller: scrollController,
                         children: [
-                          const Text('Method Type', style: TextStyle(fontWeight: FontWeight.bold)),
+                          Text(AppLocalizations.of(context)!.methodType, style: const TextStyle(fontWeight: FontWeight.bold)),
                           const SizedBox(height: 12),
                           Wrap(
                             spacing: 8,
@@ -106,7 +107,7 @@ class _LibraryScreenState extends State<LibraryScreen> {
                             }).toList(),
                           ),
                           const SizedBox(height: 24),
-                          const Text('Participants', style: TextStyle(fontWeight: FontWeight.bold)),
+                          Text(AppLocalizations.of(context)!.participants, style: const TextStyle(fontWeight: FontWeight.bold)),
                           RangeSlider(
                             values: localPeopleRange,
                             min: 0,
@@ -123,7 +124,7 @@ class _LibraryScreenState extends State<LibraryScreen> {
                             },
                           ),
                           const SizedBox(height: 24),
-                          const Text('Duration (min)', style: TextStyle(fontWeight: FontWeight.bold)),
+                          Text(AppLocalizations.of(context)!.durationMin, style: const TextStyle(fontWeight: FontWeight.bold)),
                           RangeSlider(
                             values: localTimeRange,
                             min: 0,
@@ -140,14 +141,14 @@ class _LibraryScreenState extends State<LibraryScreen> {
                             },
                           ),
                           const SizedBox(height: 24),
-                          const Text('Sort By', style: TextStyle(fontWeight: FontWeight.bold)),
+                          Text(AppLocalizations.of(context)!.sortBy, style: const TextStyle(fontWeight: FontWeight.bold)),
                           ...MethodSort.values.map((sort) {
                             String label = '';
                             switch (sort) {
-                              case MethodSort.alphabeticalAsc: label = 'Alphabetical (A-Z)'; break;
-                              case MethodSort.alphabeticalDesc: label = 'Alphabetical (Z-A)'; break;
-                              case MethodSort.dateLatest: label = 'Latest'; break;
-                              case MethodSort.dateOldest: label = 'Oldest'; break;
+                              case MethodSort.alphabeticalAsc: label = AppLocalizations.of(context)!.sortAlphabeticalAsc; break;
+                              case MethodSort.alphabeticalDesc: label = AppLocalizations.of(context)!.sortAlphabeticalDesc; break;
+                              case MethodSort.dateLatest: label = AppLocalizations.of(context)!.sortLatest; break;
+                              case MethodSort.dateOldest: label = AppLocalizations.of(context)!.sortOldest; break;
                             }
                             return RadioListTile<MethodSort>(
                               title: Text(label),
@@ -182,7 +183,7 @@ class _LibraryScreenState extends State<LibraryScreen> {
                           );
                           Navigator.pop(context);
                         },
-                        child: const Text('Apply Filters'),
+                        child: Text(AppLocalizations.of(context)!.applyFilters),
                       ),
                     ),
                   ],
@@ -211,7 +212,7 @@ class _LibraryScreenState extends State<LibraryScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      widget.isFavoritesOnly ? 'FAVORITE' : 'LIBRARY',
+                      widget.isFavoritesOnly ? AppLocalizations.of(context)!.favoriteHeader : AppLocalizations.of(context)!.libraryHeader,
                       style: TextStyle(
                         fontSize: 10,
                         fontWeight: FontWeight.w900,
@@ -220,7 +221,7 @@ class _LibraryScreenState extends State<LibraryScreen> {
                       ),
                     ),
                     Text(
-                      widget.isFavoritesOnly ? 'METHODS' : 'METHOD TOOLKIT',
+                      widget.isFavoritesOnly ? AppLocalizations.of(context)!.methodsHeader : AppLocalizations.of(context)!.methodToolkitHeader,
                       style: const TextStyle(
                         fontSize: 24,
                         fontWeight: FontWeight.w900,
@@ -245,7 +246,7 @@ class _LibraryScreenState extends State<LibraryScreen> {
             child: TextField(
               controller: _searchController,
               decoration: InputDecoration(
-                hintText: 'Search methods...',
+                hintText: AppLocalizations.of(context)!.searchMethodsHint,
                 prefixIcon: const Icon(Icons.search),
                 filled: true,
                 fillColor: colorScheme.surfaceContainerHigh,
@@ -267,7 +268,7 @@ class _LibraryScreenState extends State<LibraryScreen> {
                 child: Row(
                   children: [
                     _buildCategoryChip(
-                      'All',
+                      AppLocalizations.of(context)!.categoryAll,
                       provider.selectedMethodTypes.isEmpty,
                       onTap: () => provider.applyAllFilters(selectedMethodTypes: {}),
                     ),
@@ -302,7 +303,7 @@ class _LibraryScreenState extends State<LibraryScreen> {
                 if (methods.isEmpty) {
                   return Center(
                     child: Text(
-                      widget.isFavoritesOnly ? 'No favorites yet' : 'No methods found.',
+                      widget.isFavoritesOnly ? AppLocalizations.of(context)!.noFavoritesYet : AppLocalizations.of(context)!.noMethodsFound,
                       style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: colorScheme.onSurfaceVariant),
                     ),
                   );

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../models/method.dart';
 
 class MethodDetailScreen extends StatelessWidget {
@@ -16,7 +17,7 @@ class MethodDetailScreen extends StatelessWidget {
           icon: const Icon(Icons.arrow_back),
           onPressed: () => Navigator.pop(context),
         ),
-        title: const Text('Method Details', style: TextStyle(fontWeight: FontWeight.bold)),
+        title: Text(AppLocalizations.of(context)!.methodDetails, style: const TextStyle(fontWeight: FontWeight.bold)),
         actions: [
           IconButton(
             icon: const Icon(Icons.more_vert),
@@ -85,9 +86,9 @@ class MethodDetailScreen extends StatelessWidget {
                                 color: Colors.white.withOpacity(0.2),
                                 borderRadius: BorderRadius.circular(4),
                               ),
-                              child: const Text(
-                                '30 MINUTES',
-                                style: TextStyle(
+                              child: Text(
+                                AppLocalizations.of(context)!.minutesCapsLabel(30),
+                                style: const TextStyle(
                                   fontSize: 10,
                                   fontWeight: FontWeight.bold,
                                   color: Colors.white,
@@ -120,8 +121,12 @@ class MethodDetailScreen extends StatelessWidget {
                   child: _buildMetaCard(
                     context,
                     Icons.psychology,
-                    'METHOD INPUT',
-                    ['Paper & Sharpies', '1-8 Participants', 'Timer'],
+                    AppLocalizations.of(context)!.methodInput,
+                    [
+                      AppLocalizations.of(context)!.paperSharpies,
+                      AppLocalizations.of(context)!.oneToEightParticipants,
+                      AppLocalizations.of(context)!.timer
+                    ],
                     colorScheme.primary,
                   ),
                 ),
@@ -130,8 +135,12 @@ class MethodDetailScreen extends StatelessWidget {
                   child: _buildMetaCard(
                     context,
                     Icons.output,
-                    'METHOD OUTPUT',
-                    ['8 Rough Sketches', 'Diverse Ideas', 'Next-step Focus'],
+                    AppLocalizations.of(context)!.methodOutput,
+                    [
+                      AppLocalizations.of(context)!.eightRoughSketches,
+                      AppLocalizations.of(context)!.diverseIdeas,
+                      AppLocalizations.of(context)!.nextStepFocus
+                    ],
                     colorScheme.tertiary,
                   ),
                 ),
@@ -154,7 +163,7 @@ class MethodDetailScreen extends StatelessWidget {
                       Icon(Icons.stars, color: colorScheme.secondary, size: 20),
                       const SizedBox(width: 8),
                       Text(
-                        'THE "WHY" / BENEFIT',
+                        AppLocalizations.of(context)!.theWhyBenefit,
                         style: TextStyle(
                           fontSize: 12,
                           fontWeight: FontWeight.bold,
@@ -178,9 +187,9 @@ class MethodDetailScreen extends StatelessWidget {
               children: [
                 Icon(Icons.format_list_numbered, color: colorScheme.primary),
                 const SizedBox(width: 8),
-                const Text(
-                  'THE "HOW" / PROCESS',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                Text(
+                  AppLocalizations.of(context)!.theHowProcess,
+                  style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                 ),
               ],
             ),
@@ -203,10 +212,10 @@ class MethodDetailScreen extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text('PRO TIP:', style: TextStyle(fontWeight: FontWeight.bold)),
+                        Text(AppLocalizations.of(context)!.proTip, style: const TextStyle(fontWeight: FontWeight.bold)),
                         Text(
-                          'Keep it quiet. This is an individual exercise to prevent groupthink and ensure diverse perspectives.',
-                          style: TextStyle(fontSize: 14),
+                          AppLocalizations.of(context)!.crazyEightsProTipDesc,
+                          style: const TextStyle(fontSize: 14),
                         ),
                       ],
                     ),
@@ -266,10 +275,10 @@ class MethodDetailScreen extends StatelessWidget {
 
   List<Widget> _buildHowSteps(BuildContext context) {
     final steps = [
-      {'title': 'Prepare Paper', 'desc': 'Fold a blank piece of A4 paper into 8 sections. This creates a grid for your sketches.'},
-      {'title': 'Set the Clock', 'desc': 'Set a timer for 8 minutes total. You will have exactly 60 seconds per section.'},
-      {'title': 'Sketch Fast', 'desc': 'Sketch one idea per section. Don\'t worry about quality; focus on the core concept and quantity.'},
-      {'title': 'Review & Select', 'desc': 'Once the 8 minutes are up, share your ideas with the group and vote on the strongest concepts.'},
+      {'title': AppLocalizations.of(context)!.step1Title, 'desc': AppLocalizations.of(context)!.step1Desc},
+      {'title': AppLocalizations.of(context)!.step2Title, 'desc': AppLocalizations.of(context)!.step2Desc},
+      {'title': AppLocalizations.of(context)!.step3Title, 'desc': AppLocalizations.of(context)!.step3Desc},
+      {'title': AppLocalizations.of(context)!.step4Title, 'desc': AppLocalizations.of(context)!.step4Desc},
     ];
 
     return steps.asMap().entries.map((entry) {

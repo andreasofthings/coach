@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../providers/workshop_provider.dart';
 import '../models/workshop.dart';
 
@@ -36,20 +37,20 @@ class _WorkshopScreenState extends State<WorkshopScreen> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      const Text('Filters', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                      Text(AppLocalizations.of(context)!.filters, style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
                       TextButton(
                         onPressed: () {
                           provider.clearFilters();
                           setModalState(() {});
                         },
-                        child: const Text('Clear All'),
+                        child: Text(AppLocalizations.of(context)!.clearAll),
                       ),
                     ],
                   ),
                   const Divider(),
-                  const Text('Sort By', style: TextStyle(fontWeight: FontWeight.bold)),
+                  Text(AppLocalizations.of(context)!.sortBy, style: const TextStyle(fontWeight: FontWeight.bold)),
                   RadioListTile<WorkshopSort>(
-                    title: const Text('Date: Newest'),
+                    title: Text(AppLocalizations.of(context)!.sortDateNewest),
                     value: WorkshopSort.dateNewest,
                     groupValue: provider.currentSort,
                     onChanged: (val) {
@@ -58,7 +59,7 @@ class _WorkshopScreenState extends State<WorkshopScreen> {
                     },
                   ),
                   RadioListTile<WorkshopSort>(
-                    title: const Text('Date: Oldest'),
+                    title: Text(AppLocalizations.of(context)!.sortDateOldest),
                     value: WorkshopSort.dateOldest,
                     groupValue: provider.currentSort,
                     onChanged: (val) {
@@ -67,7 +68,7 @@ class _WorkshopScreenState extends State<WorkshopScreen> {
                     },
                   ),
                   const SizedBox(height: 16),
-                  const Text('Status', style: TextStyle(fontWeight: FontWeight.bold)),
+                  Text(AppLocalizations.of(context)!.status, style: const TextStyle(fontWeight: FontWeight.bold)),
                   Wrap(
                     spacing: 8,
                     children: WorkshopStatus.values.map((status) {
@@ -83,7 +84,7 @@ class _WorkshopScreenState extends State<WorkshopScreen> {
                     }).toList(),
                   ),
                   const SizedBox(height: 16),
-                  const Text('Location Mode', style: TextStyle(fontWeight: FontWeight.bold)),
+                  Text(AppLocalizations.of(context)!.locationMode, style: const TextStyle(fontWeight: FontWeight.bold)),
                   Wrap(
                     spacing: 8,
                     children: LocationMode.values.map((mode) {
@@ -103,7 +104,7 @@ class _WorkshopScreenState extends State<WorkshopScreen> {
                     width: double.infinity,
                     child: ElevatedButton(
                       onPressed: () => Navigator.pop(context),
-                      child: const Text('Apply'),
+                      child: Text(AppLocalizations.of(context)!.apply),
                     ),
                   ),
                 ],
@@ -130,19 +131,19 @@ class _WorkshopScreenState extends State<WorkshopScreen> {
         return StatefulBuilder(
           builder: (context, setDialogState) {
             return AlertDialog(
-              title: const Text('Create Workshop'),
+              title: Text(AppLocalizations.of(context)!.createWorkshop),
               content: SingleChildScrollView(
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     TextField(
                       controller: titleController,
-                      decoration: const InputDecoration(labelText: 'Title'),
+                      decoration: InputDecoration(labelText: AppLocalizations.of(context)!.title),
                     ),
                     const SizedBox(height: 16),
                     DropdownButtonFormField<LocationMode>(
                       value: selectedMode,
-                      decoration: const InputDecoration(labelText: 'Location Mode'),
+                      decoration: InputDecoration(labelText: AppLocalizations.of(context)!.locationMode),
                       items: LocationMode.values.map((mode) {
                         return DropdownMenuItem(value: mode, child: Text(mode.label));
                       }).toList(),
@@ -151,12 +152,12 @@ class _WorkshopScreenState extends State<WorkshopScreen> {
                     const SizedBox(height: 16),
                     TextField(
                       controller: TextEditingController(text: workshopType),
-                      decoration: const InputDecoration(labelText: 'Workshop Type'),
+                      decoration: InputDecoration(labelText: AppLocalizations.of(context)!.workshopType),
                       onChanged: (val) => workshopType = val,
                     ),
                     const SizedBox(height: 16),
                     ListTile(
-                      title: Text('Date: ${DateFormat('MMM dd, yyyy').format(selectedDate)}'),
+                      title: Text(AppLocalizations.of(context)!.dateLabel(DateFormat('MMM dd, yyyy').format(selectedDate))),
                       trailing: const Icon(Icons.calendar_today),
                       onTap: () async {
                         final date = await showDatePicker(
@@ -177,7 +178,7 @@ class _WorkshopScreenState extends State<WorkshopScreen> {
                           child: TextField(
                             controller: durationController,
                             keyboardType: TextInputType.number,
-                            decoration: const InputDecoration(labelText: 'Duration'),
+                            decoration: InputDecoration(labelText: AppLocalizations.of(context)!.duration),
                           ),
                         ),
                         const SizedBox(width: 8),
@@ -196,7 +197,7 @@ class _WorkshopScreenState extends State<WorkshopScreen> {
                     TextField(
                       controller: participantsController,
                       keyboardType: TextInputType.number,
-                      decoration: const InputDecoration(labelText: 'Participants'),
+                      decoration: InputDecoration(labelText: AppLocalizations.of(context)!.participants),
                     ),
                   ],
                 ),
@@ -204,7 +205,7 @@ class _WorkshopScreenState extends State<WorkshopScreen> {
               actions: [
                 TextButton(
                   onPressed: () => Navigator.pop(context),
-                  child: const Text('Cancel'),
+                  child: Text(AppLocalizations.of(context)!.cancel),
                 ),
                 ElevatedButton(
                   onPressed: () {
@@ -222,7 +223,7 @@ class _WorkshopScreenState extends State<WorkshopScreen> {
                     context.read<WorkshopProvider>().addWorkshop(workshop);
                     Navigator.pop(context);
                   },
-                  child: const Text('Create'),
+                  child: Text(AppLocalizations.of(context)!.create),
                 ),
               ],
             );
@@ -252,7 +253,7 @@ class _WorkshopScreenState extends State<WorkshopScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'Workshop Planner',
+                          AppLocalizations.of(context)!.workshopPlanner,
                           style: TextStyle(
                             fontSize: 28,
                             fontWeight: FontWeight.w800,
@@ -262,7 +263,7 @@ class _WorkshopScreenState extends State<WorkshopScreen> {
                         ),
                         const SizedBox(height: 4),
                         Text(
-                          'Manage and track your upcoming sessions.',
+                          AppLocalizations.of(context)!.workshopPlannerSubtitle,
                           style: TextStyle(
                             fontSize: 14,
                             color: colorScheme.onSurfaceVariant.withOpacity(0.8),
@@ -305,7 +306,7 @@ class _WorkshopScreenState extends State<WorkshopScreen> {
               child: TextField(
                 controller: _searchController,
                 decoration: InputDecoration(
-                  hintText: 'Search sessions...',
+                  hintText: AppLocalizations.of(context)!.searchSessionsHint,
                   prefixIcon: const Icon(Icons.search),
                   filled: true,
                   fillColor: colorScheme.surfaceContainerHigh.withOpacity(0.5),
@@ -336,7 +337,7 @@ class _WorkshopScreenState extends State<WorkshopScreen> {
                       children: [
                         _buildFilterButton(
                           context,
-                          label: 'All Workshops',
+                          label: AppLocalizations.of(context)!.allWorkshops,
                           isSelected: activeStatus == null,
                           onPressed: () {
                             provider.setStatusFilter(null);
@@ -345,7 +346,7 @@ class _WorkshopScreenState extends State<WorkshopScreen> {
                         const SizedBox(width: 8),
                         _buildFilterButton(
                           context,
-                          label: 'Upcoming',
+                          label: AppLocalizations.of(context)!.upcoming,
                           isSelected: activeStatus == WorkshopStatus.planned,
                           onPressed: () {
                             provider.setStatusFilter(WorkshopStatus.planned);
@@ -354,7 +355,7 @@ class _WorkshopScreenState extends State<WorkshopScreen> {
                         const SizedBox(width: 8),
                         _buildFilterButton(
                           context,
-                          label: 'Past',
+                          label: AppLocalizations.of(context)!.past,
                           isSelected: activeStatus == WorkshopStatus.delivered,
                           onPressed: () {
                             provider.setStatusFilter(WorkshopStatus.delivered);
@@ -363,7 +364,7 @@ class _WorkshopScreenState extends State<WorkshopScreen> {
                         const SizedBox(width: 8),
                         _buildFilterButton(
                           context,
-                          label: 'Filters',
+                          label: AppLocalizations.of(context)!.filters,
                           isSelected: provider.locationFilter != null,
                           icon: Icons.tune,
                           onPressed: () => _showFilterSheet(context),
@@ -486,11 +487,11 @@ class _WorkshopScreenState extends State<WorkshopScreen> {
         return await showDialog<bool>(
           context: context,
           builder: (context) => AlertDialog(
-            title: const Text('Delete Workshop'),
-            content: const Text('Are you sure you want to delete this workshop?'),
+            title: Text(AppLocalizations.of(context)!.deleteWorkshop),
+            content: Text(AppLocalizations.of(context)!.deleteWorkshopConfirm),
             actions: [
-              TextButton(onPressed: () => Navigator.pop(context, false), child: const Text('Cancel')),
-              TextButton(onPressed: () => Navigator.pop(context, true), child: const Text('Delete')),
+              TextButton(onPressed: () => Navigator.pop(context, false), child: Text(AppLocalizations.of(context)!.cancel)),
+              TextButton(onPressed: () => Navigator.pop(context, true), child: Text(AppLocalizations.of(context)!.delete)),
             ],
           ),
         );
@@ -648,7 +649,7 @@ class _WorkshopScreenState extends State<WorkshopScreen> {
                               Text(
                                 isPlanned
                                     ? '${workshop.durationValue} ${workshop.durationUnit.label}'
-                                    : '${workshop.participantCount} Participants',
+                                    : AppLocalizations.of(context)!.participantsCount(workshop.participantCount),
                                 style: TextStyle(
                                   fontSize: 12,
                                   color: colorScheme.onSurfaceVariant.withOpacity(0.8),
@@ -680,7 +681,7 @@ class _WorkshopScreenState extends State<WorkshopScreen> {
                             children: [
                               if (!isPlanned)
                                 Text(
-                                  'View Outcomes',
+                                  AppLocalizations.of(context)!.viewOutcomes,
                                   style: TextStyle(
                                     fontSize: 12,
                                     fontWeight: FontWeight.w600,
@@ -754,13 +755,13 @@ class _WorkshopScreenState extends State<WorkshopScreen> {
               child: Icon(Icons.event_available, size: 48, color: colorScheme.outline),
             ),
             const SizedBox(height: 24),
-            const Text(
-              'Organize your sessions easily.',
-              style: TextStyle(fontWeight: FontWeight.bold),
+            Text(
+              AppLocalizations.of(context)!.organizeSessionsSubtitle,
+              style: const TextStyle(fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 8),
             Text(
-              'Select a workshop to view full participant analytics and materials.',
+              AppLocalizations.of(context)!.organizeSessionsDetail,
               textAlign: TextAlign.center,
               style: TextStyle(color: colorScheme.outline, fontSize: 12),
             ),

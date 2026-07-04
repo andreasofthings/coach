@@ -11,4 +11,4 @@ This is currently under develpoment and not yet supported as such. Should this e
 
 ## Reporting a Vulnerability
 
-Please create a [Github Issue](https://github.com/andreasofthings/innovation/issues) on this repository.
+Please create a [Github Issue](https://github.com/andreasofthings/coach/issues) on this repository.

@@ -9,6 +9,7 @@ import '../providers/contact_provider.dart';
 import '../providers/workshop_provider.dart';
 import '../providers/participant_provider.dart';
 import '../providers/user_provider.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class ContactManagementScreen extends StatefulWidget {
   const ContactManagementScreen({super.key});
@@ -48,7 +49,7 @@ class _ContactManagementScreenState extends State<ContactManagementScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Contacts', style: TextStyle(fontWeight: FontWeight.bold)),
+        title: Text(AppLocalizations.of(context)!.contacts, style: const TextStyle(fontWeight: FontWeight.bold)),
         actions: [
           if (contactProvider.isLoading)
             const Padding(
@@ -69,7 +70,7 @@ class _ContactManagementScreenState extends State<ContactManagementScreen> {
             child: TextField(
               controller: _searchController,
               decoration: InputDecoration(
-                hintText: 'Search contacts...',
+                hintText: AppLocalizations.of(context)!.searchContactsHint2,
                 prefixIcon: const Icon(Icons.search),
                 border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
                 contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
@@ -85,7 +86,7 @@ class _ContactManagementScreenState extends State<ContactManagementScreen> {
                       children: [
                         Icon(Icons.contacts_outlined, size: 48, color: Colors.grey[400]),
                         const SizedBox(height: 16),
-                        Text('No contacts found', style: TextStyle(color: Colors.grey[600])),
+                        Text(AppLocalizations.of(context)!.noContactsFound, style: TextStyle(color: Colors.grey[600])),
                       ],
                     ),
                   )
@@ -104,31 +105,31 @@ class _ContactManagementScreenState extends State<ContactManagementScreen> {
                           children: [
                             IconButton(
                               icon: const Icon(Icons.add_task, size: 20),
-                              tooltip: 'Add to workshop',
+                              tooltip: AppLocalizations.of(context)!.addToWorkshopTooltip,
                               onPressed: () => _showWorkshopSelectionDialog(context, contact),
                             ),
                             IconButton(
                               icon: const Icon(Icons.edit_outlined, size: 20),
-                              tooltip: 'Edit contact',
+                              tooltip: AppLocalizations.of(context)!.editContactTooltip,
                               onPressed: () => _showEditContactDialog(context, contact),
                             ),
                             IconButton(
                               icon: const Icon(Icons.delete_outline, size: 20),
-                              tooltip: 'Delete contact',
+                              tooltip: AppLocalizations.of(context)!.deleteContactTooltip,
                               onPressed: () async {
                                 final confirm = await showDialog<bool>(
                                   context: context,
                                   builder: (context) => AlertDialog(
-                                    title: const Text('Delete Contact'),
-                                    content: Text('Are you sure you want to delete ${contact.fullName}?'),
+                                    title: Text(AppLocalizations.of(context)!.deleteContactTitle),
+                                    content: Text(AppLocalizations.of(context)!.deleteContactConfirm(contact.fullName)),
                                     actions: [
                                       TextButton(
                                         onPressed: () => Navigator.pop(context, false),
-                                        child: const Text('Cancel'),
+                                        child: Text(AppLocalizations.of(context)!.cancel),
                                       ),
                                       TextButton(
                                         onPressed: () => Navigator.pop(context, true),
-                                        child: const Text('Delete'),
+                                        child: Text(AppLocalizations.of(context)!.delete),
                                       ),
                                     ],
                                   ),
@@ -163,14 +164,14 @@ class _ContactManagementScreenState extends State<ContactManagementScreen> {
         await userProvider.fetchProfile();
         if (context.mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Contacts synced successfully')),
+            SnackBar(content: Text(AppLocalizations.of(context)!.contactsSyncedSuccessfully)),
           );
         }
       } else if (result.connectUrl != null) {
         _showConnectionDialog(context, result.connectUrl!);
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(result.error ?? 'Failed to sync contacts')),
+          SnackBar(content: Text(result.error ?? AppLocalizations.of(context)!.failedToSyncContacts)),
         );
       }
     }
@@ -180,14 +181,14 @@ class _ContactManagementScreenState extends State<ContactManagementScreen> {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Connect Google Account'),
-        content: const Text(
-          'To sync your contacts, you need to authorize access to your Google account in your browser.'
+        title: Text(AppLocalizations.of(context)!.connectGoogleAccount),
+        content: Text(
+          AppLocalizations.of(context)!.googleConnectDesc
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('Cancel'),
+            child: Text(AppLocalizations.of(context)!.cancel),
           ),
           ElevatedButton(
             onPressed: () async {
@@ -198,7 +199,7 @@ class _ContactManagementScreenState extends State<ContactManagementScreen> {
                 await launchUrl(uri, mode: LaunchMode.externalApplication);
               }
             },
-            child: const Text('Authorize'),
+            child: Text(AppLocalizations.of(context)!.authorize),
           ),
         ],
       ),
@@ -213,21 +214,21 @@ class _ContactManagementScreenState extends State<ContactManagementScreen> {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Add Contact'),
+        title: Text(AppLocalizations.of(context)!.addContactTitle),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             TextField(
               controller: firstNameController,
-              decoration: const InputDecoration(labelText: 'First Name'),
+              decoration: InputDecoration(labelText: AppLocalizations.of(context)!.firstName),
             ),
             TextField(
               controller: lastNameController,
-              decoration: const InputDecoration(labelText: 'Last Name'),
+              decoration: InputDecoration(labelText: AppLocalizations.of(context)!.lastName),
             ),
             TextField(
               controller: emailController,
-              decoration: const InputDecoration(labelText: 'Email'),
+              decoration: InputDecoration(labelText: AppLocalizations.of(context)!.email),
               keyboardType: TextInputType.emailAddress,
             ),
           ],
@@ -235,7 +236,7 @@ class _ContactManagementScreenState extends State<ContactManagementScreen> {
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('Cancel'),
+            child: Text(AppLocalizations.of(context)!.cancel),
           ),
           TextButton(
             onPressed: () async {
@@ -251,7 +252,7 @@ class _ContactManagementScreenState extends State<ContactManagementScreen> {
                 Navigator.pop(context);
               }
             },
-            child: const Text('Add'),
+            child: Text(AppLocalizations.of(context)!.add),
           ),
         ],
       ),
@@ -266,21 +267,21 @@ class _ContactManagementScreenState extends State<ContactManagementScreen> {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Edit Contact'),
+        title: Text(AppLocalizations.of(context)!.editContactTitle),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             TextField(
               controller: firstNameController,
-              decoration: const InputDecoration(labelText: 'First Name'),
+              decoration: InputDecoration(labelText: AppLocalizations.of(context)!.firstName),
             ),
             TextField(
               controller: lastNameController,
-              decoration: const InputDecoration(labelText: 'Last Name'),
+              decoration: InputDecoration(labelText: AppLocalizations.of(context)!.lastName),
             ),
             TextField(
               controller: emailController,
-              decoration: const InputDecoration(labelText: 'Email'),
+              decoration: InputDecoration(labelText: AppLocalizations.of(context)!.email),
               keyboardType: TextInputType.emailAddress,
             ),
           ],
@@ -288,7 +289,7 @@ class _ContactManagementScreenState extends State<ContactManagementScreen> {
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('Cancel'),
+            child: Text(AppLocalizations.of(context)!.cancel),
           ),
           TextButton(
             onPressed: () async {
@@ -307,7 +308,7 @@ class _ContactManagementScreenState extends State<ContactManagementScreen> {
                 Navigator.pop(context);
               }
             },
-            child: const Text('Save'),
+            child: Text(AppLocalizations.of(context)!.save),
           ),
         ],
       ),
@@ -322,9 +323,9 @@ class _ContactManagementScreenState extends State<ContactManagementScreen> {
         final plannedWorkshops = workshops.where((w) => w.date.isAfter(DateTime.now())).toList();
 
         return AlertDialog(
-          title: Text('Add ${contact.fullName} to Workshop'),
+          title: Text(AppLocalizations.of(context)!.addContactToWorkshopTitle(contact.fullName)),
           content: plannedWorkshops.isEmpty
-              ? const Text('No planned workshops found.')
+              ? Text(AppLocalizations.of(context)!.noPlannedWorkshops)
               : SizedBox(
                   width: double.maxFinite,
                   child: ListView.builder(
@@ -343,7 +344,7 @@ class _ContactManagementScreenState extends State<ContactManagementScreen> {
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text('Cancel'),
+              child: Text(AppLocalizations.of(context)!.cancel),
             ),
           ],
         );
@@ -368,11 +369,11 @@ class _ContactManagementScreenState extends State<ContactManagementScreen> {
       Navigator.pop(context);
       if (success) {
         scaffoldMessenger.showSnackBar(
-          SnackBar(content: Text('${contact.fullName} added to ${workshop.title}')),
+          SnackBar(content: Text(AppLocalizations.of(context)!.contactAddedToWorkshop(contact.fullName, workshop.title))),
         );
       } else {
         scaffoldMessenger.showSnackBar(
-          const SnackBar(content: Text('Failed to add participant')),
+          SnackBar(content: Text(AppLocalizations.of(context)!.failedToAddParticipant)),
         );
       }
     }

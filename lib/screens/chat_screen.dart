@@ -5,6 +5,7 @@ import 'package:flutter/gestures.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../providers/chat_provider.dart';
 import '../providers/auth_provider.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class ChatScreen extends StatefulWidget {
   const ChatScreen({super.key});
@@ -47,7 +48,7 @@ class _ChatScreenState extends State<ChatScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Sauna Chat'),
+        title: Text(AppLocalizations.of(context)!.saunaChatTitle),
         actions: [
           if (chatProvider.isLoading)
             const Padding(
@@ -74,7 +75,7 @@ class _ChatScreenState extends State<ChatScreen> {
             ),
           Expanded(
             child: chatProvider.room == null
-                ? const Center(child: Text('Connecting to #sauna...'))
+                ? Center(child: Text(AppLocalizations.of(context)!.connectingToSauna))
                 : _buildTimeline(chatProvider),
           ),
           _buildInputArea(colorScheme),
@@ -91,11 +92,11 @@ class _ChatScreenState extends State<ChatScreen> {
           return const Center(child: CircularProgressIndicator());
         }
         if (snapshot.hasError) {
-          return Center(child: Text('Error loading timeline: ${snapshot.error}'));
+          return Center(child: Text(AppLocalizations.of(context)!.errorLoadingTimeline(snapshot.error.toString())));
         }
         final timeline = snapshot.data;
         if (timeline == null) {
-          return const Center(child: Text('No messages yet'));
+          return Center(child: Text(AppLocalizations.of(context)!.noMessagesYet));
         }
 
         final events = timeline.events.where((e) => e.relationshipEventId == null).toList();
@@ -173,10 +174,10 @@ class _ChatScreenState extends State<ChatScreen> {
           Expanded(
             child: TextField(
               controller: _messageController,
-              decoration: const InputDecoration(
-                hintText: 'Type a message...',
+              decoration: InputDecoration(
+                hintText: AppLocalizations.of(context)!.typeMessageHint,
                 border: InputBorder.none,
-                contentPadding: EdgeInsets.symmetric(horizontal: 12),
+                contentPadding: const EdgeInsets.symmetric(horizontal: 12),
               ),
               onSubmitted: (_) => _sendMessage(),
             ),

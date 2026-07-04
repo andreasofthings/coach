@@ -7,6 +7,7 @@ import '../providers/user_provider.dart';
 import '../providers/auth_provider.dart';
 import '../providers/contact_provider.dart';
 import '../models/user_profile.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -96,7 +97,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         await userProvider.fetchProfile();
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Contacts synced successfully')),
+            SnackBar(content: Text(AppLocalizations.of(context)!.contactsSyncedSuccessfully)),
           );
         }
       } else if (result.connectUrl != null) {
@@ -106,7 +107,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       } else {
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(result.error ?? 'Sync failed')),
+            SnackBar(content: Text(result.error ?? AppLocalizations.of(context)!.syncFailed)),
           );
         }
       }
@@ -119,14 +120,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Connect Google Account'),
-        content: const Text(
-          'To sync your contacts, you need to authorize access to your Google account in your browser.'
+        title: Text(AppLocalizations.of(context)!.connectGoogleAccount),
+        content: Text(
+          AppLocalizations.of(context)!.googleConnectDesc
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('Cancel'),
+            child: Text(AppLocalizations.of(context)!.cancel),
           ),
           ElevatedButton(
             onPressed: () async {
@@ -138,7 +139,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 await launchUrl(uri, mode: LaunchMode.externalApplication);
               }
             },
-            child: const Text('Authorize'),
+            child: Text(AppLocalizations.of(context)!.authorize),
           ),
         ],
       ),
@@ -156,7 +157,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     }
 
     if (profile == null) {
-      return const Scaffold(body: Center(child: Text('Profile not found')));
+      return Scaffold(body: Center(child: Text(AppLocalizations.of(context)!.profileNotFound)));
     }
 
     final avatarColor = Color(int.parse(profile.color.replaceFirst('#', '0xFF')));
@@ -164,7 +165,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Profile', style: TextStyle(fontWeight: FontWeight.bold)),
+        title: Text(AppLocalizations.of(context)!.profile, style: const TextStyle(fontWeight: FontWeight.bold)),
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
@@ -202,32 +203,32 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
             _buildSection(
               context,
-              'PERSONAL INFORMATION',
+              AppLocalizations.of(context)!.personalInformation,
               [
                 _buildDropdown<String>(
-                  label: 'Language',
+                  label: AppLocalizations.of(context)!.language,
                   value: profile.language,
                   items: [
-                    const DropdownMenuItem(value: 'en', child: Text('English')),
-                    const DropdownMenuItem(value: 'de', child: Text('German')),
+                    DropdownMenuItem(value: 'en', child: Text(AppLocalizations.of(context)!.english)),
+                    DropdownMenuItem(value: 'de', child: Text(AppLocalizations.of(context)!.german)),
                   ],
                   onChanged: (val) {
                     if (val != null) _updateProfileField((p) => p.copyWith(language: val));
                   },
                 ),
                 _buildDropdown<String>(
-                  label: 'Country',
+                  label: AppLocalizations.of(context)!.country,
                   value: _countries.contains(profile.country) ? profile.country : null,
-                  hint: 'Select Country',
+                  hint: AppLocalizations.of(context)!.selectCountry,
                   items: _countries.map((c) => DropdownMenuItem(value: c, child: Text(c))).toList(),
                   onChanged: (val) {
                     if (val != null) _updateProfileField((p) => p.copyWith(country: val));
                   },
                 ),
                 ListTile(
-                  title: const Text('Date of Birth', style: TextStyle(fontSize: 14)),
+                  title: Text(AppLocalizations.of(context)!.dateOfBirth, style: const TextStyle(fontSize: 14)),
                   trailing: Text(
-                    profile.dateOfBirth != null ? DateFormat('yyyy-MM-dd').format(profile.dateOfBirth!) : 'Not set',
+                    profile.dateOfBirth != null ? DateFormat('yyyy-MM-dd').format(profile.dateOfBirth!) : AppLocalizations.of(context)!.notSet,
                     style: const TextStyle(fontWeight: FontWeight.w500),
                   ),
                   onTap: () async {
@@ -248,22 +249,22 @@ class _ProfileScreenState extends State<ProfileScreen> {
             const SizedBox(height: 16),
             _buildSection(
               context,
-              'WORKSHOP PREFERENCES',
+              AppLocalizations.of(context)!.workshopPreferences,
               [
                 _buildDropdown<String>(
-                  label: 'Default Setting',
+                  label: AppLocalizations.of(context)!.defaultSetting,
                   value: profile.defaultWorkshopSetting,
-                  items: const [
-                    DropdownMenuItem(value: 'on-site', child: Text('On-Site')),
-                    DropdownMenuItem(value: 'hybrid', child: Text('Hybrid')),
-                    DropdownMenuItem(value: 'virtual', child: Text('Virtual')),
+                  items: [
+                    DropdownMenuItem(value: 'on-site', child: Text(AppLocalizations.of(context)!.onSite)),
+                    DropdownMenuItem(value: 'hybrid', child: Text(AppLocalizations.of(context)!.hybrid)),
+                    DropdownMenuItem(value: 'virtual', child: Text(AppLocalizations.of(context)!.virtual)),
                   ],
                   onChanged: (val) {
                     if (val != null) _updateProfileField((p) => p.copyWith(defaultWorkshopSetting: val));
                   },
                 ),
                 _buildNumberInput(
-                  label: 'Default Length (min)',
+                  label: AppLocalizations.of(context)!.defaultLengthMin,
                   initialValue: profile.defaultWorkshopLength.toString(),
                   onChanged: (val) {
                     final length = int.tryParse(val);
@@ -276,7 +277,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   },
                 ),
                 _buildNumberInput(
-                  label: 'Default Group Size',
+                  label: AppLocalizations.of(context)!.defaultGroupSize,
                   initialValue: profile.defaultGroupSize.toString(),
                   onChanged: (val) {
                     final size = int.tryParse(val);
@@ -296,7 +297,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          const Text('Confidence Level', style: TextStyle(fontSize: 14)),
+                          Text(AppLocalizations.of(context)!.confidenceLevel, style: const TextStyle(fontSize: 14)),
                           Text('${(profile.confidence * 100).toInt()}%', style: const TextStyle(fontWeight: FontWeight.bold)),
                         ],
                       ),
@@ -322,10 +323,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
             const SizedBox(height: 16),
             _buildSection(
               context,
-              'VISUAL PREFERENCES',
+              AppLocalizations.of(context)!.visualPreferences,
               [
                 ListTile(
-                  title: const Text('Theme Color', style: TextStyle(fontSize: 14)),
+                  title: Text(AppLocalizations.of(context)!.themeColor, style: const TextStyle(fontSize: 14)),
                   trailing: Container(
                     width: 24,
                     height: 24,
@@ -338,7 +339,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   onTap: () => _showColorPicker(context, profile),
                 ),
                 ListTile(
-                  title: const Text('Profile Icon', style: TextStyle(fontSize: 14)),
+                  title: Text(AppLocalizations.of(context)!.profileIcon, style: const TextStyle(fontSize: 14)),
                   trailing: Icon(avatarIcon, color: colorScheme.primary),
                   onTap: () => _showIconPicker(context, profile),
                 ),
@@ -348,15 +349,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
             const SizedBox(height: 16),
             _buildSection(
               context,
-              'INTEGRATIONS',
+              AppLocalizations.of(context)!.integrations,
               [
                 ListTile(
                   leading: const Icon(Icons.contacts_outlined),
-                  title: const Text('Google Contacts', style: TextStyle(fontSize: 14)),
+                  title: Text(AppLocalizations.of(context)!.googleContacts, style: const TextStyle(fontSize: 14)),
                   subtitle: Text(
                     profile.isGoogleConnected 
-                        ? 'Connected • Tap to manage contacts' 
-                        : 'Not connected',
+                        ? AppLocalizations.of(context)!.connectedTapToManage 
+                        : AppLocalizations.of(context)!.notConnected,
                     style: TextStyle(fontSize: 12, color: profile.isGoogleConnected ? Colors.green : null),
                   ),
                   onTap: () {
@@ -368,7 +369,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       if (!profile.isGoogleConnected)
                         TextButton(
                           onPressed: _handleGoogleSync,
-                          child: const Text('Connect'),
+                          child: Text(AppLocalizations.of(context)!.connect),
                         ),
                       if (profile.isGoogleConnected)
                         _isSyncing 
@@ -376,12 +377,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           : IconButton(
                               icon: const Icon(Icons.sync),
                               onPressed: _handleGoogleSync,
-                              tooltip: 'Sync Contacts',
+                              tooltip: AppLocalizations.of(context)!.syncContactsTooltip,
                             ),
                       IconButton(
                         icon: const Icon(Icons.refresh, size: 20),
                         onPressed: () => context.read<UserProvider>().fetchProfile(),
-                        tooltip: 'Refresh Status',
+                        tooltip: AppLocalizations.of(context)!.refreshStatusTooltip,
                       ),
                     ],
                   ),
@@ -392,10 +393,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
             const SizedBox(height: 16),
             _buildSection(
               context,
-              'ACTIVITY',
+              AppLocalizations.of(context)!.activity,
               [
                 ListTile(
-                  title: const Text('Favorite Methods', style: TextStyle(fontSize: 14)),
+                  title: Text(AppLocalizations.of(context)!.favoriteMethods, style: const TextStyle(fontSize: 14)),
                   trailing: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
@@ -414,7 +415,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               child: OutlinedButton.icon(
                 onPressed: () => context.read<AuthProvider>().logout(),
                 icon: const Icon(Icons.logout),
-                label: const Text('Logout'),
+                label: Text(AppLocalizations.of(context)!.logout),
                 style: OutlinedButton.styleFrom(
                   foregroundColor: colorScheme.error,
                   side: BorderSide(color: colorScheme.error),
@@ -501,7 +502,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              const Text('Select Theme Color', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+              Text(AppLocalizations.of(context)!.selectThemeColor, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
               const SizedBox(height: 16),
               Wrap(
                 spacing: 12,
@@ -547,7 +548,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              const Text('Select Profile Icon', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+              Text(AppLocalizations.of(context)!.selectProfileIcon, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
               const SizedBox(height: 16),
               SizedBox(
                 height: 200,

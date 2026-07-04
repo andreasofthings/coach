@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../providers/auth_provider.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class LoginScreen extends StatelessWidget {
   const LoginScreen({super.key});
@@ -13,7 +14,7 @@ class LoginScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Coach'),
+        title: Text(AppLocalizations.of(context)!.appTitle),
         centerTitle: true,
         backgroundColor: isDark ? colorScheme.surface : const Color(0xFF000000),
         foregroundColor: colorScheme.primary,
@@ -58,18 +59,18 @@ class LoginScreen extends StatelessWidget {
                               ),
                             ),
                             const SizedBox(height: 24),
-                            const Text(
-                              'Ready to Coach?',
-                              style: TextStyle(
+                            Text(
+                              AppLocalizations.of(context)!.readyToCoach,
+                              style: const TextStyle(
                                 fontSize: 24,
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
                             const SizedBox(height: 16),
-                            const Text(
-                              'Start planning your next workshop here.',
+                            Text(
+                              AppLocalizations.of(context)!.loginSubtitle,
                               textAlign: TextAlign.center,
-                              style: TextStyle(
+                              style: const TextStyle(
                                 fontSize: 16,
                                 color: Colors.grey,
                               ),
@@ -98,9 +99,9 @@ class LoginScreen extends StatelessWidget {
                                 borderRadius: BorderRadius.circular(8),
                               ),
                             ),
-                            child: const Text(
-                              'Login',
-                              style: TextStyle(fontSize: 18),
+                            child: Text(
+                              AppLocalizations.of(context)!.login,
+                              style: const TextStyle(fontSize: 18),
                             ),
                           ),
                         ),
@@ -113,9 +114,9 @@ class LoginScreen extends StatelessWidget {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        const Text(
-                          'made with ❤️ in Munich by ',
-                          style: TextStyle(fontSize: 12, color: Colors.grey),
+                        Text(
+                          AppLocalizations.of(context)!.madeWithLove,
+                          style: const TextStyle(fontSize: 12, color: Colors.grey),
                         ),
                         GestureDetector(
                           onTap: () {
@@ -153,7 +154,7 @@ class LoginScreen extends StatelessWidget {
   void _showError(BuildContext context, dynamic e) {
     if (context.mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Login failed: $e')),
+        SnackBar(content: Text(AppLocalizations.of(context)!.loginFailed(e.toString()))),
       );
     }
   }
